@@ -305,14 +305,14 @@ namespace Microsoft.AspNet.Mvc
             ActionModel action,
             ControllerModel controller)
         {
-            foreach (var key in controller.Properties.Keys)
+            foreach (var item in controller.Properties)
             {
-                actionDescriptor.Properties[key] = controller.Properties[key];
+                actionDescriptor.Properties[item.Key] = item.Value;
             }
 
-            foreach (var key in action.Properties.Keys)
+            foreach (var item in action.Properties)
             {
-                actionDescriptor.Properties[key] = action.Properties[key];
+                actionDescriptor.Properties[item.Key] = item.Value;
             }
         }
 

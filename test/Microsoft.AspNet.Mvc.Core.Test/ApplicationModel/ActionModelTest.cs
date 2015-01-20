@@ -53,6 +53,7 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             action.Filters.Add(new AuthorizeAttribute());
             action.HttpMethods.Add("GET");
             action.RouteConstraints.Add(new AreaAttribute("Admin"));
+            action.Properties.Add(new KeyValuePair<object, object>("test key", "test value"));
 
             // Act
             var action2 = new ActionModel(action);
@@ -77,6 +78,13 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
 
                     // Ensure non-default value
                     Assert.NotEmpty((IEnumerable<object>)value1);
+                }
+                else if (typeof(IDictionary<object, object>).IsAssignableFrom(property.PropertyType))
+                {
+                    Assert.Equal(value1, value2);
+
+                    // Ensure non-default value
+                    Assert.NotEmpty((IDictionary<object, object>)value1);
                 }
                 else if (property.PropertyType.IsValueType ||
                     Nullable.GetUnderlyingType(property.PropertyType) != null)

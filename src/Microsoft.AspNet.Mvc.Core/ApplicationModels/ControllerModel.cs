@@ -37,13 +37,13 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             Attributes = new List<object>(other.Attributes);
             Filters = new List<IFilter>(other.Filters);
             RouteConstraints = new List<IRouteConstraintProvider>(other.RouteConstraints);
+            Properties = new Dictionary<object, object>(other.Properties);
 
             // Make a deep copy of other 'model' types.
             Actions = new List<ActionModel>(other.Actions.Select(a => new ActionModel(a)));
             ApiExplorer = new ApiExplorerModel(other.ApiExplorer);
             AttributeRoutes = new List<AttributeRouteModel>(
                 other.AttributeRoutes.Select(a => new AttributeRouteModel(a)));
-            Properties = new Dictionary<object, object>(other.Properties);
         }
 
         public IList<IActionConstraintMetadata> ActionConstraints { get; private set; }
@@ -72,6 +72,6 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         /// <summary>
         /// Stores arbitrary metadata properties associated with the Controller.
         /// </summary>
-        public IDictionary<object, object> Properties { get; private set; }
+        public IDictionary<object, object> Properties { get; }
     }
 }
