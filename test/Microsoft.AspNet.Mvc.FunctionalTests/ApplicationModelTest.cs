@@ -64,7 +64,40 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
 
             var body = await response.Content.ReadAsStringAsync();
             Assert.Equal("CoolMetadata", body);
+        }
 
+        [Fact]
+        public async Task ApplicationModel_AddPropertyToActionDescriptor_FromControllerModel()
+        {
+            // Arrange
+            var server = TestServer.Create(_services, _app);
+            var client = server.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("http://localhost/ApplicationModel/GetCommonDescription");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal("Common Controller Description", body);
+        }
+
+        [Fact]
+        public async Task ApplicationModel_ProvidesMetadataToActionDescriptor_ActionModelOverwritesControllerModel()
+        {
+            // Arrange
+            var server = TestServer.Create(_services, _app);
+            var client = server.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("http://localhost/ApplicationModel/GetActionSpecificDescription");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal("Specific Action Description", body);
         }
     }
 }

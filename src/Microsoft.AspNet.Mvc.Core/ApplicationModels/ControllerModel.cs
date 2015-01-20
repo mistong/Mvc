@@ -21,6 +21,7 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             ActionConstraints = new List<IActionConstraintMetadata>();
             Filters = new List<IFilter>();
             RouteConstraints = new List<IRouteConstraintProvider>();
+            Properties = new Dictionary<object, object>();
         }
 
         public ControllerModel([NotNull] ControllerModel other)
@@ -42,6 +43,7 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             ApiExplorer = new ApiExplorerModel(other.ApiExplorer);
             AttributeRoutes = new List<AttributeRouteModel>(
                 other.AttributeRoutes.Select(a => new AttributeRouteModel(a)));
+            Properties = new Dictionary<object, object>(other.Properties);
         }
 
         public IList<IActionConstraintMetadata> ActionConstraints { get; private set; }
@@ -66,5 +68,10 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         public IList<IFilter> Filters { get; private set; }
 
         public IList<IRouteConstraintProvider> RouteConstraints { get; private set; }
+
+        /// <summary>
+        /// Stores arbitrary metadata properties associated with the Controller.
+        /// </summary>
+        public IDictionary<object, object> Properties { get; private set; }
     }
 }

@@ -21,6 +21,7 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             HttpMethods = new List<string>();
             Parameters = new List<ParameterModel>();
             RouteConstraints = new List<IRouteConstraintProvider>();
+            Properties = new Dictionary<object, object>();
         }
 
         public ActionModel([NotNull] ActionModel other)
@@ -46,6 +47,8 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             {
                 AttributeRouteModel = new AttributeRouteModel(other.AttributeRouteModel);
             }
+
+            Properties = new Dictionary<object, object>(other.Properties);
         }
 
         public IList<IActionConstraintMetadata> ActionConstraints { get; private set; }
@@ -76,5 +79,10 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         public IList<ParameterModel> Parameters { get; private set; }
 
         public IList<IRouteConstraintProvider> RouteConstraints { get; private set; }
+
+        /// <summary>
+        /// Stores arbitrary metadata properties associated with the Action.
+        /// </summary>
+        public IDictionary<object, object> Properties { get; private set; }
     }
 }
