@@ -35,6 +35,8 @@ namespace Microsoft.AspNet.Mvc
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/xml"));
         }
 
+        public IList<IWrapperProvider> WrapperProviders { get; set; } = new List<IWrapperProvider>();
+
         /// <inheritdoc />
         public IList<MediaTypeHeaderValue> SupportedMediaTypes { get; private set; }
 
@@ -108,7 +110,7 @@ namespace Microsoft.AspNet.Mvc
         {
             return new DataContractSerializer(type);
         }
-
+        
         private object GetDefaultValueForType(Type modelType)
         {
             if (modelType.GetTypeInfo().IsValueType)
@@ -126,8 +128,23 @@ namespace Microsoft.AspNet.Mvc
 
             using (var xmlReader = CreateXmlReader(new DelegatingStream(request.Body)))
             {
-                var xmlSerializer = CreateDataContractSerializer(type);
-                return Task.FromResult(xmlSerializer.ReadObject(xmlReader));
+                var wrapperInfo = FormattingUtilities.GetWrapperInformation(
+                    WrapperProviders,
+                    originalType: type,
+                    serialization: false);
+
+                type = wrapperInfo.WrappingType ?? wrapperInfo.OriginalType;
+
+                var serializer = CreateDataContractSerializer(type);
+
+                var deserializedObject = serializer.ReadObject(xmlReader);
+
+                if (wrapperInfo.WrapperProvider != null)
+                {
+                    deserializedObject = wrapperInfo.WrapperProvider.Unwrap(type, deserializedObject);
+                }
+
+                return Task.FromResult(deserializedObject);
             }
         }
     }

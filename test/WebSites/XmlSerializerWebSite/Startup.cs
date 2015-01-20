@@ -5,6 +5,7 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Routing;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace XmlSerializerWebSite
 {
@@ -23,7 +24,64 @@ namespace XmlSerializerWebSite
                 services.Configure<MvcOptions>(options =>
                     {
                         options.InputFormatters.Clear();
-                        options.InputFormatters.Insert(0, new XmlSerializerInputFormatter());
+                        options.OutputFormatters.Clear();
+
+                        var xmlSerializerInputFormatter = new XmlSerializerInputFormatter();
+                        xmlSerializerInputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        xmlSerializerInputFormatter.SupportedMediaTypes.Clear();
+                        xmlSerializerInputFormatter.SupportedMediaTypes.Add(
+                            new MediaTypeHeaderValue("application/xml-xmlser"));
+                        xmlSerializerInputFormatter.SupportedMediaTypes.Add(
+                            new MediaTypeHeaderValue("text/xml-xmlser"));
+
+                        var xmlSerializerOutputFormatter = new XmlSerializerOutputFormatter();
+                        xmlSerializerOutputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        xmlSerializerOutputFormatter.SupportedMediaTypes.Clear();
+                        xmlSerializerOutputFormatter.SupportedMediaTypes.Add(
+                            new MediaTypeHeaderValue("application/xml-xmlser"));
+                        xmlSerializerOutputFormatter.SupportedMediaTypes.Add(
+                            new MediaTypeHeaderValue("text/xml-xmlser"));
+
+                        var dcsInputFormatter = new XmlDataContractSerializerInputFormatter();
+                        dcsInputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        dcsInputFormatter.SupportedMediaTypes.Clear();
+                        dcsInputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/xml-dcs"));
+                        dcsInputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/xml-dcs"));
+
+                        var dcsOutputFormatter = new XmlDataContractSerializerOutputFormatter();
+                        dcsOutputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        dcsOutputFormatter.SupportedMediaTypes.Clear();
+                        dcsOutputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/xml-dcs"));
+                        dcsOutputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/xml-dcs"));
+
+                        options.InputFormatters.Add(dcsInputFormatter);
+                        options.InputFormatters.Add(xmlSerializerInputFormatter);
+                        options.OutputFormatters.Add(dcsOutputFormatter);
+                        options.OutputFormatters.Add(xmlSerializerOutputFormatter);
+
+                        // Add wrapper providers for both formatters
+                        xmlSerializerInputFormatter.WrapperProviders.Add(
+                            new EnumerableWrapperProvider(xmlSerializerInputFormatter.WrapperProviders));
+                        xmlSerializerInputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        xmlSerializerInputFormatter.WrapperProviders.Add(new SerializableErrorWrapperProvider());
+
+                        xmlSerializerOutputFormatter.WrapperProviders.Add(
+                            new EnumerableWrapperProvider(xmlSerializerOutputFormatter.WrapperProviders));
+                        xmlSerializerOutputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        xmlSerializerOutputFormatter.WrapperProviders.Add(new SerializableErrorWrapperProvider());
+
+                        // TODO: DCS should not require this but check again
+                        dcsInputFormatter.WrapperProviders.Add(
+                            new EnumerableWrapperProvider(dcsOutputFormatter.WrapperProviders));
+                        dcsInputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        dcsInputFormatter.WrapperProviders.Add(new SerializableErrorWrapperProvider());
+
+                        dcsOutputFormatter.WrapperProviders.Add(
+                            new EnumerableWrapperProvider(dcsOutputFormatter.WrapperProviders));
+                        dcsOutputFormatter.WrapperProviders.Add(new PersonWrapperProvider());
+                        dcsOutputFormatter.WrapperProviders.Add(new SerializableErrorWrapperProvider());
+
+                        options.OutputFormatters.Add(xmlSerializerOutputFormatter);
                     });
             });
 

@@ -1,6 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 #if ASPNET50
 using System.Runtime.Serialization;
 #endif
@@ -46,6 +49,44 @@ namespace Microsoft.AspNet.Mvc
                 OmitXmlDeclaration = true,
                 CloseOutput = false,
                 CheckCharacters = false
+            };
+        }
+
+        public static WrapperInfo GetWrapperInformation(
+            IEnumerable<IWrapperProvider> wrapperProviders,
+            Type originalType,
+            bool serialization)
+        {
+            IWrapperProvider wrappingProvider = null;
+            Type wrappingType = null;
+            if (serialization)
+            {
+                foreach (var wrapperProvider in wrapperProviders)
+                {
+                    if (wrapperProvider.TryGetWrappingTypeForSerialization(originalType, out wrappingType))
+                    {
+                        wrappingProvider = wrapperProvider;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var wrapperProvider in wrapperProviders)
+                {
+                    if (wrapperProvider.TryGetWrappingTypeForDeserialization(originalType, out wrappingType))
+                    {
+                        wrappingProvider = wrapperProvider;
+                        break;
+                    }
+                }
+            }
+
+            return new WrapperInfo()
+            {
+                OriginalType = originalType,
+                WrappingType = wrappingType,
+                WrapperProvider = wrappingProvider
             };
         }
     }

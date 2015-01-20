@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
@@ -256,6 +257,10 @@ namespace Microsoft.AspNet.Mvc.Core
                     new Dictionary<string, string> { { "Hello", "world" } }, typeof(object), false };
                 yield return new object[] {
                     new Dictionary<string, string> { { "Hello", "world" } }, typeof(Dictionary<string,string>), false };
+                yield return new object[] {
+                    new[] {"value1", "value2"}, typeof(IEnumerable<string>), true };
+                yield return new object[] {
+                    Enumerable.Range(1, 2).Select(i => "value" + i).AsQueryable(), typeof(IQueryable<string>), true };
             }
         }
 
@@ -265,6 +270,7 @@ namespace Microsoft.AspNet.Mvc.Core
         {
             // Arrange
             var formatter = new XmlSerializerOutputFormatter();
+            formatter.WrapperProviders.Add(new EnumerableWrapperProvider(formatter.WrapperProviders));
             var outputFormatterContext = GetOutputFormatterContext(input, declaredType);
 
             // Act

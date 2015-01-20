@@ -27,7 +27,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             var input = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<DummyClass><SampleInt>"
                 + sampleInputInt.ToString() + "</SampleInt></DummyClass>";
-            var content = new StringContent(input, Encoding.UTF8, "application/xml");
+            var content = new StringContent(input, Encoding.UTF8, "application/xml-xmlser");
 
             // Act
             var response = await client.PostAsync("http://localhost/Home/Index", content);
@@ -48,7 +48,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
                 "<DummyClas xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" " +
                 "i:type=\"DerivedDummyClass\" xmlns=\"http://schemas.datacontract.org/2004/07/XmlSerializerWebSite\">" +
                 "<SampleInt>" + sampleInputInt.ToString() + "</SampleInt></DummyClass>";
-            var content = new StringContent(input, Encoding.UTF8, "application/xml");
+            var content = new StringContent(input, Encoding.UTF8, "application/xml-xmlser");
 
             // Act
             var response = await client.PostAsync("http://localhost/Home/Index", content);
