@@ -11,10 +11,16 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         {
             Controllers = new List<ControllerModel>();
             Filters = new List<IFilter>();
+            Properties = new Dictionary<object, object>();
         }
 
         public IList<ControllerModel> Controllers { get; private set; }
 
         public IList<IFilter> Filters { get; private set; }
+
+        /// <summary>
+        /// Stores arbitrary metadata properties associated with the Application.
+        /// </summary>
+        public IDictionary<object, object> Properties { get; }
     }
 }

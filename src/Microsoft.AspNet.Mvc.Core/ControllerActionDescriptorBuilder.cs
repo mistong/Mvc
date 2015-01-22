@@ -57,7 +57,7 @@ namespace Microsoft.AspNet.Mvc
 
                         AddApiExplorerInfo(actionDescriptor, action, controller);
                         AddRouteConstraints(removalConstraints, actionDescriptor, controller, action);
-                        AddProperties(actionDescriptor, action, controller);
+                        AddProperties(actionDescriptor, action, controller, application);
 
                         if (IsAttributeRoutedAction(actionDescriptor))
                         {
@@ -303,8 +303,14 @@ namespace Microsoft.AspNet.Mvc
         private static void AddProperties(
             ControllerActionDescriptor actionDescriptor,
             ActionModel action,
-            ControllerModel controller)
+            ControllerModel controller,
+            ApplicationModel application)
         {
+            foreach (var item in application.Properties)
+            {
+                actionDescriptor.Properties[item.Key] = item.Value;
+            }
+
             foreach (var item in controller.Properties)
             {
                 actionDescriptor.Properties[item.Key] = item.Value;

@@ -48,7 +48,6 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
             {
                 AttributeRouteModel = new AttributeRouteModel(other.AttributeRouteModel);
             }
-
         }
 
         public IList<IActionConstraintMetadata> ActionConstraints { get; private set; }
