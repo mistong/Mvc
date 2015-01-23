@@ -27,3 +27,5 @@ nuget.exe
 *.*sdf
 *.ipch
 *.sln.ide
+node_modules
+**/[Cc]ompiler/[Rr]esources/**/*.js
