@@ -15,7 +15,7 @@ namespace Microsoft.AspNet.Mvc
         [InlineData("json", "application/json", "JSON")]
         [InlineData(".foo", "text/foo", "Foo")]
         [InlineData(".Json", "application/json", "json")]
-        [InlineData("FOo", "text/foo", "FOO")]
+        [InlineData("FOo", "text/foo", "FOO")]        
         public void FormatterMappings_SetFormatMapping_DiffSetGetFormat(string setFormat, string contentType, string getFormat)
         {
             // Arrange
@@ -38,11 +38,45 @@ namespace Microsoft.AspNet.Mvc
         {
             // Arrange
             var options = new FormatterMappings();
-            var expected = string.Format(@"The media type {0} is not valid. The media type containing ""<mediatype>/*"" are not supported.", format);
+            var expected = string.Format(@"The media type ""{0}"" is not valid. MediaTypes containing wildcards (*) " + 
+                "are not allowed in formatter mappings.", format);
 
             // Act and assert
-            var exception = Assert.Throws<ArgumentException>(() => options.SetMediaTypeMappingForFormat("star", MediaTypeHeaderValue.Parse(format)));
+            var exception = Assert.Throws<ArgumentException>(() => options.SetMediaTypeMappingForFormat(
+                "star", 
+                MediaTypeHeaderValue.Parse(format)));
             Assert.Equal(expected, exception.Message);
+        }
+
+        [Theory]
+        [InlineData(".xml", true)]
+        [InlineData("json", true)]
+        [InlineData(".foo", true)]
+        [InlineData(".Json", true)]
+        [InlineData("FOo", true)]
+        [InlineData("bar", true)]
+        [InlineData("baz", false)]
+        [InlineData(".baz", false)]
+        [InlineData("BAZ", false)]
+        public void FormatterMappings_ClearFormatMapping(string format, bool expected)
+        {
+            // Arrange
+            var options = new FormatterMappings();
+            var mediaType = MediaTypeHeaderValue.Parse("application/xml");
+            options.SetMediaTypeMappingForFormat("xml", mediaType);
+            mediaType = MediaTypeHeaderValue.Parse("application/json");
+            options.SetMediaTypeMappingForFormat("json", mediaType);
+            mediaType = MediaTypeHeaderValue.Parse("application/foo");
+            options.SetMediaTypeMappingForFormat("foo", mediaType);
+            mediaType = MediaTypeHeaderValue.Parse("application/bar");
+            options.SetMediaTypeMappingForFormat("bar", mediaType);
+
+            // Act 
+            bool cleared = options.ClearMediaTypeMappingForFormat(format);
+
+            // Assert
+            Assert.Equal(expected, cleared);
+            Assert.Null(options.GetMediaTypeMappingForFormat(format));
         }
     }
 }

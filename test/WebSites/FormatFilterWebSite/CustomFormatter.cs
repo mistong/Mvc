@@ -36,7 +36,7 @@ namespace FormatFilterWebSite
         public override async Task WriteResponseBodyAsync(OutputFormatterContext context)
         {
             var response = context.ActionContext.HttpContext.Response;
-            response.ContentType = ContentType + ";charset=utf-8";
+            response.ContentType = ContentType;
             await response.WriteAsync(context.Object.ToString());
         }
     }

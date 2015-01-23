@@ -419,6 +419,6 @@
     <value>If the '{0}' property is not set to true, '{1}' property must be specified.</value>
   </data>
   <data name="FormatterMappings_NotValidMediaType" xml:space="preserve">
-    <value>The media type {0} is not valid. The media type containing "&lt;mediatype&gt;/*" are not supported.</value>
+    <value>The media type "{0}" is not valid. MediaTypes containing wildcards (*) are not allowed in formatter mappings.</value>
   </data>
 </root>
