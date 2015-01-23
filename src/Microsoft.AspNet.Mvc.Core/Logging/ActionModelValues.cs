@@ -88,7 +88,7 @@ namespace Microsoft.AspNet.Mvc.Logging
         public IList<ActionConstraintValues> ActionConstraints { get; }
 
         /// <summary>
-        /// The arbitrary metadata properties associated with the action <see cref="ActionModel.Properties"/>.
+        /// Gets the arbitrary metadata properties associated with the action <see cref="ActionModel.Properties"/>.
         /// </summary>
         public IDictionary<object, object> Properties { get; }
 

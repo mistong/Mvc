@@ -85,7 +85,7 @@ namespace Microsoft.AspNet.Mvc.Logging
         public List<AttributeRouteModelValues> AttributeRoutes { get; set; }
 
         /// <summary>
-        /// The arbitrary metadata properties associated with the controller <see cref="ControllerModel.Properties"/>.
+        /// Gets the arbitrary metadata properties associated with the controller <see cref="ControllerModel.Properties"/>.
         /// </summary>
         public IDictionary<object, object> Properties { get; }
 

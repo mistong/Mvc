@@ -19,7 +19,7 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         public IList<IFilter> Filters { get; private set; }
 
         /// <summary>
-        /// Stores arbitrary metadata properties associated with the Application.
+        /// Stores arbitrary metadata properties associated with all actions.
         /// </summary>
         public IDictionary<object, object> Properties { get; }
     }

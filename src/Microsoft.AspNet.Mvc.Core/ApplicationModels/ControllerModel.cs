@@ -70,8 +70,9 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         public IList<IRouteConstraintProvider> RouteConstraints { get; private set; }
 
         /// <summary>
-        /// Stores arbitrary metadata properties associated with the Controller.
+        /// Stores arbitrary metadata properties associated with the controller.
         /// </summary>
+        /// <remarks>Overwrites the properties set in <see cref="ApplicationModel.Properties"/>.</remarks>
         public IDictionary<object, object> Properties { get; }
     }
 }
