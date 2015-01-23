@@ -72,7 +72,10 @@ namespace Microsoft.AspNet.Mvc.ApplicationModels
         /// <summary>
         /// Stores arbitrary metadata properties associated with the controller.
         /// </summary>
-        /// <remarks>Overwrites the properties set in <see cref="ApplicationModel.Properties"/>.</remarks>
+        /// <remarks>
+        /// Entries will take precedence over entries with the same key
+        /// in <see cref="ApplicationModel.Properties"/>.
+        /// </remarks>
         public IDictionary<object, object> Properties { get; }
     }
 }
